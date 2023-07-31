@@ -8,7 +8,6 @@ const Nav = styled.nav`
   align-items: center;
   justify-content: center;
   border-bottom: 0.1rem solid;
-  box-shadow: 0.2rem 0.2rem 0.8rem;
 `;
 
 const Navbar = () => {
