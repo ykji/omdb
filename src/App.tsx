@@ -1,8 +1,18 @@
+import { Routes, Route } from "react-router-dom";
+
+import Home from "./pages/Home";
+import Navbar from "./components/Navbar";
+import Favorites from "./pages/Favorites";
+
 function App() {
   return (
-    <>
-      <p>Hello</p>
-    </>
+    <div style={{ height: "100%" }}>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/favorites" element={<Favorites />} />
+      </Routes>
+    </div>
   );
 }
 
