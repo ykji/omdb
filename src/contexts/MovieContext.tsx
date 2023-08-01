@@ -4,6 +4,7 @@ import { Movie } from "../interfaces/movie";
 interface MovieContextType {
   movies: Movie[];
   starredMovies: Movie[];
+  updateFavorite: (id: string) => void;
   addMovies: (movies: Movie[]) => void;
   addFavourite: (movie: Movie) => void;
   updateMovies: (movies: Movie[]) => void;
@@ -27,6 +28,7 @@ const MovieProvider = (props: Props) => {
       Type: "movie",
       Poster:
         "https://m.media-amazon.com/images/M/MV5BNGQwZjg5YmYtY2VkNC00NzliLTljYTctNzI5NmU3MjE2ODQzXkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_SX300.jpg",
+      isFavorite: true,
     },
     {
       Title: "The Hangover Part II",
@@ -35,6 +37,7 @@ const MovieProvider = (props: Props) => {
       Type: "movie",
       Poster:
         "https://m.media-amazon.com/images/M/MV5BMTM2MTM4MzY2OV5BMl5BanBnXkFtZTcwNjQ3NzI4NA@@._V1_SX300.jpg",
+      isFavorite: false,
     },
     {
       Title: "The Hangover Part III",
@@ -43,6 +46,7 @@ const MovieProvider = (props: Props) => {
       Type: "movie",
       Poster:
         "https://m.media-amazon.com/images/M/MV5BMTA0NjE1MzMzODheQTJeQWpwZ15BbWU3MDY4MTQ3Mzk@._V1_SX300.jpg",
+      isFavorite: true,
     },
     {
       Title: "Hangover Square",
@@ -51,6 +55,7 @@ const MovieProvider = (props: Props) => {
       Type: "movie",
       Poster:
         "https://m.media-amazon.com/images/M/MV5BZTBkODMzMjEtMGI5ZS00NGVjLWE3ZGYtNWEzOWJmMjk2ZmNkXkEyXkFqcGdeQXVyMTMxMTY0OTQ@._V1_SX300.jpg",
+      isFavorite: false,
     },
     {
       Title: "The Last Hangover",
@@ -59,6 +64,7 @@ const MovieProvider = (props: Props) => {
       Type: "movie",
       Poster:
         "https://m.media-amazon.com/images/M/MV5BZGQ2MDJjNjctZGZiNy00YTA3LWJjOTUtMGUwOTM5ZTBjMWYzXkEyXkFqcGdeQXVyMTkzODUwNzk@._V1_SX300.jpg",
+      isFavorite: true,
     },
   ]);
   const [starredMovies, setStarredMovies] = useState<Movie[]>([]);
@@ -69,6 +75,17 @@ const MovieProvider = (props: Props) => {
 
   const updateMovies = (movies: Movie[]) => {
     setMovies(movies);
+  };
+
+  const updateFavorite = (id: string) => {
+    const movieIndex = movies.findIndex((movie) => movie.imdbID === id);
+
+    if (movieIndex !== -1) {
+      const updatedMovies = [...movies];
+      updatedMovies[movieIndex].isFavorite =
+        !updatedMovies[movieIndex].isFavorite;
+      setMovies(updatedMovies);
+    }
   };
 
   const addFavourite = (movie: Movie) => {
@@ -88,6 +105,7 @@ const MovieProvider = (props: Props) => {
         starredMovies,
         addMovies,
         updateMovies,
+        updateFavorite,
         addFavourite,
         removeFavourite,
       }}

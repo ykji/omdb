@@ -10,6 +10,7 @@ export const useMovieContext = () => {
     addMovies,
     updateMovies,
     addFavourite,
+    updateFavorite,
     removeFavourite,
   } = movieContext;
 
@@ -18,6 +19,7 @@ export const useMovieContext = () => {
     starredMovies,
     addMovies,
     updateMovies,
+    updateFavorite,
     addFavourite,
     removeFavourite,
   };

@@ -1,6 +1,8 @@
+import { MouseEvent } from "react";
 import styled from "@emotion/styled";
 import { Movie } from "../interfaces/movie";
 import { AiFillHeart } from "react-icons/ai";
+import { useMovieContext } from "../hooks/useMovieContext";
 
 interface Props {
   movie: Movie;
@@ -26,9 +28,11 @@ const Card = styled.div`
 
 const FavIconWrapper = styled.div`
   z-index: 3;
-  right: 2rem;
   top: 31rem;
+  right: 2rem;
+  cursor: pointer;
   position: absolute;
+  color: ${(props) => props.color};
 `;
 
 const Image = styled.img`
@@ -69,7 +73,13 @@ const MovieType = styled.p`
 `;
 
 const MovieCard = (props: Props) => {
-  const { Title, Poster, Year, Type } = props.movie;
+  const { Title, Poster, Year, Type, isFavorite, imdbID } = props.movie;
+  const { updateFavorite } = useMovieContext();
+
+  const handleUpdateFavorite = (e: MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    updateFavorite(imdbID);
+  };
 
   return (
     <Card>
@@ -79,7 +89,10 @@ const MovieCard = (props: Props) => {
         <MovieType>{Type}</MovieType>
         <MovieYear>{Year}</MovieYear>
       </Details>
-      <FavIconWrapper>
+      <FavIconWrapper
+        color={isFavorite ? "red" : "white"}
+        onClick={(e) => handleUpdateFavorite(e)}
+      >
         <AiFillHeart size={30} />
       </FavIconWrapper>
     </Card>

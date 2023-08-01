@@ -1,6 +1,7 @@
+import { Link } from "react-router-dom";
 import styled from "@emotion/styled";
-import { useMovieContext } from "../hooks/useMovieContext";
 import MovieCard from "../components/MovieCard";
+import { useMovieContext } from "../hooks/useMovieContext";
 
 const HomeContainer = styled.div`
   display: flex;
@@ -9,6 +10,36 @@ const HomeContainer = styled.div`
   padding: 0 4rem;
   align-items: center;
   flex-direction: column;
+`;
+
+const Actions = styled.div`
+  gap: 2rem;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+
+  @media (min-width: 640px) {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+`;
+
+const OpenFavorites = styled(Link)`
+  color: black;
+  margin: 0 auto;
+  font-weight: 500;
+  font-size: 1.6rem;
+  border-radius: 0.7rem;
+  text-decoration: none;
+  padding: 0.4rem 0.8rem;
+  background-color: white;
+  box-shadow: 2px 2px 2px gray;
+  border: 0.2rem solid white;
+
+  @media (min-width: 640px) {
+    margin: 0;
+  }
 `;
 
 const SearchBox = styled.input`
@@ -48,11 +79,14 @@ const Home = () => {
 
   return (
     <HomeContainer>
-      <SearchBox
-        type="text"
-        placeholder="Search movie"
-        onChange={(e) => fetchMovies(e.target.value)}
-      />
+      <Actions>
+        <OpenFavorites to="favorites">Favorites</OpenFavorites>
+        <SearchBox
+          type="text"
+          placeholder="Search movie"
+          onChange={(e) => fetchMovies(e.target.value)}
+        />
+      </Actions>
       <div style={{ width: "100%" }}>
         <MoviesContainer>
           {movies.map((movie) => (
