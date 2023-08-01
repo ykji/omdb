@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import styled from "@emotion/styled";
 import MovieCard from "../components/MovieCard";
 import { useMovieContext } from "../hooks/useMovieContext";
+import EmptyState from "../components/EmptyState";
 
 const HomeContainer = styled.div`
   display: flex;
@@ -57,7 +58,7 @@ const SearchBox = styled.input`
   }
 `;
 
-const MoviesContainer = styled.div`
+export const MoviesContainer = styled.div`
   gap: 3rem;
   display: grid;
   margin-top: 4rem;
@@ -87,13 +88,17 @@ const Home = () => {
           onChange={(e) => fetchMovies(e.target.value)}
         />
       </Actions>
-      <div style={{ width: "100%" }}>
-        <MoviesContainer>
-          {movies.map((movie) => (
-            <MovieCard key={movie.imdbID} movie={movie} />
-          ))}
-        </MoviesContainer>
-      </div>
+      {movies.length ? (
+        <div style={{ width: "100%" }}>
+          <MoviesContainer>
+            {movies.map((movie) => (
+              <MovieCard key={movie.imdbID} movie={movie} />
+            ))}
+          </MoviesContainer>
+        </div>
+      ) : (
+        <EmptyState message="Please search movies through the search box." />
+      )}
     </HomeContainer>
   );
 };
