@@ -20,7 +20,7 @@ const Card = styled(Link)`
   padding-bottom: 1rem;
   text-decoration: none;
   flex-direction: column;
-  border: 0.05rem solid gray;
+  border: 0.05rem solid #393737;
 
   @media (min-width: 640px) {
     margin: 0;

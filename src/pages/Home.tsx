@@ -10,6 +10,7 @@ import {
   QUERY_PARAM_INITIAL_STATE,
   QueryParam,
 } from "../interfaces/queryParam";
+import SkeletonMovieCard from "../components/SkeletonMovieCard";
 
 const HomeContainer = styled.div`
   display: flex;
@@ -178,7 +179,7 @@ const Home = () => {
   return (
     <HomeContainer>
       <Actions>
-        <OpenFavorites to="favorites">Favorites {totalPages}</OpenFavorites>
+        <OpenFavorites to="favorites">Favorites</OpenFavorites>
         <SearchBox
           type="text"
           placeholder="Search movie"
@@ -186,7 +187,13 @@ const Home = () => {
         />
       </Actions>
       {loading ? (
-        <h1>Loading...</h1>
+        <div style={{ width: "100%" }}>
+          <MoviesContainer>
+            {[...Array(7)].map(() => (
+              <SkeletonMovieCard />
+            ))}
+          </MoviesContainer>
+        </div>
       ) : error ? (
         <Heading>{error}</Heading>
       ) : movies.length ? (
@@ -195,10 +202,8 @@ const Home = () => {
             {movies.map((movie) => (
               <MovieCard key={movie.imdbID} movie={movie} />
             ))}
+            {infiniteLoader && [...Array(7)].map(() => <SkeletonMovieCard />)}
           </MoviesContainer>
-          {infiniteLoader && (
-            <LoadingMoreWrapper>Loading more...</LoadingMoreWrapper>
-          )}
         </div>
       ) : (
         <EmptyState message="Please search movies through the search box." />

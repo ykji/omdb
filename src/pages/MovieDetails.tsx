@@ -3,6 +3,7 @@ import styled from "@emotion/styled";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Movie } from "../interfaces/movie";
+import SkeletonMovieDetails from "../components/SkeletonMovieDetails";
 
 const Container = styled.div`
   display: flex;
@@ -11,6 +12,7 @@ const Container = styled.div`
   max-width: 128rem;
   align-items: center;
   flex-direction: column;
+  height: 100%;
 `;
 
 const DetailsWrapper = styled.div`
@@ -26,6 +28,7 @@ const DetailsWrapper = styled.div`
 `;
 
 const Heading = styled.h1`
+  text-align: center;
   font-size: 2.8rem;
 `;
 
@@ -109,7 +112,7 @@ const MovieDetails = () => {
   return (
     <Container>
       {error && <Heading>{error}</Heading>}
-      {loading && <Heading>Loading...</Heading>}
+      {loading && <SkeletonMovieDetails />}
       {!error && !loading && (
         <DetailsWrapper>
           <Heading>{Title}</Heading>
