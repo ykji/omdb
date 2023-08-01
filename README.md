@@ -3,7 +3,7 @@
 - SPA
 - Mobile first
 - CSS-in-Js using emotion
-- Lighthouse performance - 91
+- Lighthouse performance - 90+
 - Skeleton Loaders
 - Typescript
 - Infinite scroll

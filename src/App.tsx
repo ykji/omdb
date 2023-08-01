@@ -11,7 +11,7 @@ function App() {
   const { updateMovies } = useMovieContext();
 
   useEffect(() => {
-    const storedMovies = localStorage.getItem("movies");
+    const storedMovies = sessionStorage.getItem("movies");
     if (storedMovies) {
       updateMovies(JSON.parse(storedMovies));
     }

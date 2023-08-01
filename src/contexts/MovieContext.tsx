@@ -21,12 +21,12 @@ const MovieProvider = (props: Props) => {
 
   const addMovies = (newMovies: Movie[]) => {
     const updatedMovies = [...movies, ...newMovies];
-    localStorage.setItem("movies", JSON.stringify(updatedMovies));
+    sessionStorage.setItem("movies", JSON.stringify(updatedMovies));
     setMovies(updatedMovies);
   };
 
   const updateMovies = (movies: Movie[]) => {
-    localStorage.setItem("movies", JSON.stringify(movies));
+    sessionStorage.setItem("movies", JSON.stringify(movies));
     setMovies(movies);
   };
 
@@ -37,7 +37,7 @@ const MovieProvider = (props: Props) => {
       const updatedMovies = [...movies];
       updatedMovies[movieIndex].isFavorite =
         !updatedMovies[movieIndex].isFavorite;
-      localStorage.setItem("movies", JSON.stringify(updatedMovies));
+      sessionStorage.setItem("movies", JSON.stringify(updatedMovies));
       setMovies(updatedMovies);
     }
   };

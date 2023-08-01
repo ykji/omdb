@@ -19,7 +19,7 @@ const SkeletonDetailsWrapper = styled.div`
   flex-direction: column;
 
   @media (min-width: 640px) {
-    padding: 0 12rem;
+    padding: 0 5rem;
     gap: 5rem;
   }
 `;

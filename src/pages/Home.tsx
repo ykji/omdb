@@ -152,7 +152,7 @@ const Home = () => {
   };
 
   const updateSerchTerm = (search: string) => {
-    if (search.length > 2) {
+    if (search.length > 0) {
       setLoading(true);
       setQueryParam({ page: 1, searchTerm: search });
     }
@@ -189,8 +189,8 @@ const Home = () => {
       {loading ? (
         <div style={{ width: "100%" }}>
           <MoviesContainer>
-            {[...Array(7)].map(() => (
-              <SkeletonMovieCard />
+            {[...Array(7)].map((_, i) => (
+              <SkeletonMovieCard key={i} />
             ))}
           </MoviesContainer>
         </div>
@@ -202,7 +202,8 @@ const Home = () => {
             {movies.map((movie) => (
               <MovieCard key={movie.imdbID} movie={movie} />
             ))}
-            {infiniteLoader && [...Array(7)].map(() => <SkeletonMovieCard />)}
+            {infiniteLoader &&
+              [...Array(7)].map((_, i) => <SkeletonMovieCard key={i} />)}
           </MoviesContainer>
         </div>
       ) : (
