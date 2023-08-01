@@ -20,7 +20,7 @@ const DetailsWrapper = styled.div`
   flex-direction: column;
 
   @media (min-width: 640px) {
-    padding: 0 16rem;
+    padding: 0 12rem;
     gap: 5rem;
   }
 `;
@@ -41,12 +41,14 @@ const Details = styled.div`
 
 const Image = styled.img`
   height: 30rem;
+  max-width: 30rem;
   object-fit: cover;
   transition: all 0.3s;
   border-radius: 2rem;
 
   @media (min-width: 640px) {
     height: 50rem;
+    max-width: 40rem;
 
     &:hover {
       scale: 1.1;
@@ -114,7 +116,7 @@ const MovieDetails = () => {
           <Details>
             <Image src={Poster} alt={Title} />
             <Column>
-              <p>{`Type: ${Type}`}</p>
+              <p>{`Type: ${Type.toUpperCase()}`}</p>
               <p>{`Genre: ${Genre}`}</p>
               <p>{`Director: ${Director}`}</p>
               <p>{`Starcast: ${Actors}`}</p>

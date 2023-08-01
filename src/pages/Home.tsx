@@ -1,11 +1,15 @@
 import axios from "axios";
-import { useState } from "react";
 import styled from "@emotion/styled";
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { debounce } from "../utils/debounce";
 import MovieCard from "../components/MovieCard";
 import EmptyState from "../components/EmptyState";
 import { useMovieContext } from "../hooks/useMovieContext";
+import {
+  QUERY_PARAM_INITIAL_STATE,
+  QueryParam,
+} from "../interfaces/queryParam";
 
 const HomeContainer = styled.div`
   display: flex;
@@ -79,42 +83,97 @@ const Heading = styled.h4`
   font-size: 1.6rem;
 `;
 
+const LoadingMoreWrapper = styled.p`
+  margin: 3rem 0;
+  font-size: 1.6rem;
+  text-align: center;
+`;
+
 const Home = () => {
-  const [page, setPage] = useState<number>(1);
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-  const [totalPages, setTotalPages] = useState<number>(0);
+  const [totalPages, setTotalPages] = useState<number>(1);
+  const [infiniteLoader, setInfiniteLoader] = useState<boolean>(false);
+  const [queryParam, setQueryParam] = useState<QueryParam>(
+    QUERY_PARAM_INITIAL_STATE
+  );
 
-  const { updateMovies } = useMovieContext();
+  const { updateMovies, addMovies } = useMovieContext();
 
-  const fetchMovies = async (searchTerm: string, isNewSearchTerm: boolean) => {
-    if (!searchTerm) {
-      return;
+  const fetchMovies = async () => {
+    const { page, searchTerm } = queryParam;
+    let isNewSearchTerm = true;
+    if (queryParam.page > 1) {
+      isNewSearchTerm = false;
     }
-    setLoading(true);
+
     try {
       const result = await axios.get(
         `https://omdbapi.com/?s=${searchTerm.trim()}&apikey=9722c586&page=${page}`
       );
-
       const { Search, totalResults, Response, Error } = result.data;
-
       if (Response === "False") {
         setError(Error);
       } else {
         setError("");
         setTotalPages(Math.ceil(totalResults / 10));
-        updateMovies(Search);
+        if (isNewSearchTerm) {
+          updateMovies(Search);
+        } else {
+          addMovies(Search);
+        }
       }
     } catch (error: any) {
       const message = error.message;
       setError(message);
     } finally {
+      setInfiniteLoader(false);
       setLoading(false);
     }
   };
 
-  const debouncedFetchMovies = debounce(fetchMovies, 300);
+  const handleInfiniteScroll = () => {
+    if (
+      window.innerHeight + document.documentElement.scrollTop + 5 >
+        document.documentElement.scrollHeight &&
+      !infiniteLoader
+    ) {
+      if (queryParam.page < totalPages) {
+        setInfiniteLoader(true);
+        setQueryParam((prev) => {
+          return {
+            ...prev,
+            page: prev.page + 1,
+          };
+        });
+      }
+    }
+  };
+
+  const updateSerchTerm = (search: string) => {
+    if (search.length > 2) {
+      setLoading(true);
+      setQueryParam({ page: 1, searchTerm: search });
+    }
+  };
+
+  const debouncedUpdateSearchTerm = debounce(updateSerchTerm, 300);
+  const debouncedHandleInfiniteScroll = debounce(
+    () => handleInfiniteScroll(),
+    300
+  );
+
+  useEffect(() => {
+    window.addEventListener("scroll", debouncedHandleInfiniteScroll);
+    
+    return () => {
+      window.removeEventListener("scroll", debouncedHandleInfiniteScroll);
+    };
+  }, [debouncedHandleInfiniteScroll]);
+
+  useEffect(() => {
+    queryParam.searchTerm && fetchMovies();
+  }, [queryParam]);
 
   const { movies } = useMovieContext();
 
@@ -125,7 +184,7 @@ const Home = () => {
         <SearchBox
           type="text"
           placeholder="Search movie"
-          onChange={(e) => debouncedFetchMovies(e.target.value, true)}
+          onChange={(e) => debouncedUpdateSearchTerm(e.target.value)}
         />
       </Actions>
       {loading ? (
@@ -135,12 +194,13 @@ const Home = () => {
       ) : movies.length ? (
         <div style={{ width: "100%" }}>
           <MoviesContainer>
-            {movies.map((movie, index) => {
-              if (index !== movies.length - 1) {
-                return <MovieCard key={movie.imdbID} movie={movie} />;
-              }
-            })}
+            {movies.map((movie) => (
+              <MovieCard key={movie.imdbID} movie={movie} />
+            ))}
           </MoviesContainer>
+          {infiniteLoader && (
+            <LoadingMoreWrapper>Loading more...</LoadingMoreWrapper>
+          )}
         </div>
       ) : (
         <EmptyState message="Please search movies through the search box." />
