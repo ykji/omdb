@@ -1,8 +1,11 @@
-import { Link } from "react-router-dom";
+import axios from "axios";
+import { useState } from "react";
 import styled from "@emotion/styled";
+import { Link } from "react-router-dom";
+import { debounce } from "../utils/debounce";
 import MovieCard from "../components/MovieCard";
-import { useMovieContext } from "../hooks/useMovieContext";
 import EmptyState from "../components/EmptyState";
+import { useMovieContext } from "../hooks/useMovieContext";
 
 const HomeContainer = styled.div`
   display: flex;
@@ -71,29 +74,72 @@ export const MoviesContainer = styled.div`
   }
 `;
 
+const Heading = styled.h4`
+  margin-top: 4rem;
+  font-size: 1.6rem;
+`;
+
 const Home = () => {
-  const fetchMovies = (searchTerm: string) => {
-    console.log(searchTerm);
+  const [page, setPage] = useState<number>(1);
+  const [error, setError] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const [totalPages, setTotalPages] = useState<number>(0);
+
+  const { updateMovies } = useMovieContext();
+
+  const fetchMovies = async (searchTerm: string, isNewSearchTerm: boolean) => {
+    if (!searchTerm) {
+      return;
+    }
+    setLoading(true);
+    try {
+      const result = await axios.get(
+        `https://omdbapi.com/?s=${searchTerm.trim()}&apikey=9722c586&page=${page}`
+      );
+
+      const { Search, totalResults, Response, Error } = result.data;
+
+      if (Response === "False") {
+        setError(Error);
+      } else {
+        setError("");
+        setTotalPages(Math.ceil(totalResults / 10));
+        updateMovies(Search);
+      }
+    } catch (error: any) {
+      const message = error.message;
+      setError(message);
+    } finally {
+      setLoading(false);
+    }
   };
+
+  const debouncedFetchMovies = debounce(fetchMovies, 300);
 
   const { movies } = useMovieContext();
 
   return (
     <HomeContainer>
       <Actions>
-        <OpenFavorites to="favorites">Favorites</OpenFavorites>
+        <OpenFavorites to="favorites">Favorites {totalPages}</OpenFavorites>
         <SearchBox
           type="text"
           placeholder="Search movie"
-          onChange={(e) => fetchMovies(e.target.value)}
+          onChange={(e) => debouncedFetchMovies(e.target.value, true)}
         />
       </Actions>
-      {movies.length ? (
+      {loading ? (
+        <h1>Loading...</h1>
+      ) : error ? (
+        <Heading>{error}</Heading>
+      ) : movies.length ? (
         <div style={{ width: "100%" }}>
           <MoviesContainer>
-            {movies.map((movie) => (
-              <MovieCard key={movie.imdbID} movie={movie} />
-            ))}
+            {movies.map((movie, index) => {
+              if (index !== movies.length - 1) {
+                return <MovieCard key={movie.imdbID} movie={movie} />;
+              }
+            })}
           </MoviesContainer>
         </div>
       ) : (

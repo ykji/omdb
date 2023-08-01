@@ -6,21 +6,15 @@ export const useMovieContext = () => {
 
   const {
     movies,
-    starredMovies,
     addMovies,
     updateMovies,
-    addFavourite,
     updateFavorite,
-    removeFavourite,
   } = movieContext;
 
   return {
     movies,
-    starredMovies,
     addMovies,
     updateMovies,
     updateFavorite,
-    addFavourite,
-    removeFavourite,
   };
 };

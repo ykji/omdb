@@ -3,12 +3,9 @@ import { Movie } from "../interfaces/movie";
 
 interface MovieContextType {
   movies: Movie[];
-  starredMovies: Movie[];
   updateFavorite: (id: string) => void;
   addMovies: (movies: Movie[]) => void;
-  addFavourite: (movie: Movie) => void;
   updateMovies: (movies: Movie[]) => void;
-  removeFavourite: (movie: Movie) => void;
 }
 
 export const MovieContext = createContext<MovieContextType>(
@@ -67,7 +64,6 @@ const MovieProvider = (props: Props) => {
       isFavorite: true,
     },
   ]);
-  const [starredMovies, setStarredMovies] = useState<Movie[]>([]);
 
   const addMovies = (movies: Movie[]) => {
     setMovies((prev) => [...prev, ...movies]);
@@ -88,26 +84,13 @@ const MovieProvider = (props: Props) => {
     }
   };
 
-  const addFavourite = (movie: Movie) => {
-    setStarredMovies([...starredMovies, movie]);
-  };
-
-  const removeFavourite = (movie: Movie) => {
-    setStarredMovies((prev) => {
-      return prev.filter((curr) => curr.imdbID !== movie.imdbID);
-    });
-  };
-
   return (
     <MovieContext.Provider
       value={{
         movies,
-        starredMovies,
         addMovies,
         updateMovies,
         updateFavorite,
-        addFavourite,
-        removeFavourite,
       }}
     >
       {props.children}
