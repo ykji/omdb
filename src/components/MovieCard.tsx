@@ -3,12 +3,13 @@ import styled from "@emotion/styled";
 import { Movie } from "../interfaces/movie";
 import { AiFillHeart } from "react-icons/ai";
 import { useMovieContext } from "../hooks/useMovieContext";
+import { Link } from "react-router-dom";
 
 interface Props {
   movie: Movie;
 }
 
-const Card = styled.div`
+const Card = styled(Link)`
   width: 80%;
   display: flex;
   margin: 0 auto;
@@ -17,8 +18,9 @@ const Card = styled.div`
   align-items: start;
   border-radius: 2rem;
   padding-bottom: 1rem;
+  text-decoration: none;
   flex-direction: column;
-  border: 0.05rem solid white;
+  border: 0.05rem solid gray;
 
   @media (min-width: 640px) {
     margin: 0;
@@ -52,6 +54,7 @@ const Image = styled.img`
 
 const Details = styled.div`
   width: 85%;
+  color: #c8c2c2;
   padding: 0 3rem;
   margin-top: 1rem;
   overflow: hidden;
@@ -82,7 +85,7 @@ const MovieCard = (props: Props) => {
   };
 
   return (
-    <Card>
+    <Card to={`/${imdbID}`}>
       <Image src={Poster} alt={Title} />
       <Details>
         <MovieTitle>{Title}</MovieTitle>

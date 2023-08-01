@@ -5,4 +5,8 @@ export interface Movie {
   Poster: string;
   imdbID: string;
   isFavorite: boolean;
+  Genre?: string;
+  Actors?: string;
+  Director?: string;
+  Language?: string;
 }
