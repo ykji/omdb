@@ -17,59 +17,16 @@ interface Props {
 }
 
 const MovieProvider = (props: Props) => {
-  const [movies, setMovies] = useState<Movie[]>([
-    {
-      Title: "The Hangover",
-      Year: "2009",
-      imdbID: "tt1119646",
-      Type: "movie",
-      Poster:
-        "https://m.media-amazon.com/images/M/MV5BNGQwZjg5YmYtY2VkNC00NzliLTljYTctNzI5NmU3MjE2ODQzXkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_SX300.jpg",
-      isFavorite: true,
-    },
-    {
-      Title: "The Hangover Part II",
-      Year: "2011",
-      imdbID: "tt1411697",
-      Type: "movie",
-      Poster:
-        "https://m.media-amazon.com/images/M/MV5BMTM2MTM4MzY2OV5BMl5BanBnXkFtZTcwNjQ3NzI4NA@@._V1_SX300.jpg",
-      isFavorite: false,
-    },
-    {
-      Title: "The Hangover Part III",
-      Year: "2013",
-      imdbID: "tt1951261",
-      Type: "movie",
-      Poster:
-        "https://m.media-amazon.com/images/M/MV5BMTA0NjE1MzMzODheQTJeQWpwZ15BbWU3MDY4MTQ3Mzk@._V1_SX300.jpg",
-      isFavorite: true,
-    },
-    {
-      Title: "Hangover Square",
-      Year: "1945",
-      imdbID: "tt0037761",
-      Type: "movie",
-      Poster:
-        "https://m.media-amazon.com/images/M/MV5BZTBkODMzMjEtMGI5ZS00NGVjLWE3ZGYtNWEzOWJmMjk2ZmNkXkEyXkFqcGdeQXVyMTMxMTY0OTQ@._V1_SX300.jpg",
-      isFavorite: false,
-    },
-    {
-      Title: "The Last Hangover",
-      Year: "2018",
-      imdbID: "tt9476490",
-      Type: "movie",
-      Poster:
-        "https://m.media-amazon.com/images/M/MV5BZGQ2MDJjNjctZGZiNy00YTA3LWJjOTUtMGUwOTM5ZTBjMWYzXkEyXkFqcGdeQXVyMTkzODUwNzk@._V1_SX300.jpg",
-      isFavorite: true,
-    },
-  ]);
+  const [movies, setMovies] = useState<Movie[]>([]);
 
-  const addMovies = (movies: Movie[]) => {
-    setMovies((prev) => [...prev, ...movies]);
+  const addMovies = (newMovies: Movie[]) => {
+    const updatedMovies = [...movies, ...newMovies];
+    localStorage.setItem("movies", JSON.stringify(updatedMovies));
+    setMovies(updatedMovies);
   };
 
   const updateMovies = (movies: Movie[]) => {
+    localStorage.setItem("movies", JSON.stringify(movies));
     setMovies(movies);
   };
 
@@ -80,6 +37,7 @@ const MovieProvider = (props: Props) => {
       const updatedMovies = [...movies];
       updatedMovies[movieIndex].isFavorite =
         !updatedMovies[movieIndex].isFavorite;
+      localStorage.setItem("movies", JSON.stringify(updatedMovies));
       setMovies(updatedMovies);
     }
   };

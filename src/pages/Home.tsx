@@ -98,7 +98,7 @@ const Home = () => {
     QUERY_PARAM_INITIAL_STATE
   );
 
-  const { updateMovies, addMovies } = useMovieContext();
+  const { movies, updateMovies, addMovies } = useMovieContext();
 
   const fetchMovies = async () => {
     const { page, searchTerm } = queryParam;
@@ -165,7 +165,7 @@ const Home = () => {
 
   useEffect(() => {
     window.addEventListener("scroll", debouncedHandleInfiniteScroll);
-    
+
     return () => {
       window.removeEventListener("scroll", debouncedHandleInfiniteScroll);
     };
@@ -174,8 +174,6 @@ const Home = () => {
   useEffect(() => {
     queryParam.searchTerm && fetchMovies();
   }, [queryParam]);
-
-  const { movies } = useMovieContext();
 
   return (
     <HomeContainer>
