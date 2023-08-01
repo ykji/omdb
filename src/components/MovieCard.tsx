@@ -80,6 +80,7 @@ const MovieCard = (props: Props) => {
   const { updateFavorite } = useMovieContext();
 
   const handleUpdateFavorite = (e: MouseEvent<HTMLDivElement>) => {
+    e.preventDefault();
     e.stopPropagation();
     updateFavorite(imdbID);
   };
